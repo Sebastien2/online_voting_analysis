@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Online voting: measure of privacy and verifiability}
+\author{boire.sebastien }
+\date{November 2020}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\maketitle
+
+
+\section{First scheme: public storage of a subset of possible vote values}
+
+\subsection{Description}
+
+We consider an election with candidates $C_1, ..., C_K$. Voter V votes for $C_i$, and the value of the vote is stored encrypted so that it can be counted, verified by V, and secret. In addition, (k-1) other candidates are chosen at random, and a public ticket is produced: "Voter V voted for $C_{i_1}$ or $C_{i_2}$ or ... or $C_{i_k}$.", with one of the $C_{i_j}$ being $C_i$, the correct value.
+
+\subsection{Evaluation of verifiability}
+
+We note $X^i_j$ the binary variable corresponding to "Does voter j voted for candidate i?". Then:
+
+$Y_\alpha^i=X^i_1+...+X^i_\alpha$ is a binomial variable following $\mathcal{B}(\alpha, p_i)$, with $p_i$ probability of vote for candidate i.
+
+In a similar way, we note $\tilde{X}^i_j$ the binary variable corresponding to "Does the public vote of voter j contains candidate i as a possible vote?".
+
+$\tilde{Y}_\alpha^i=\tilde{X}^i_1+...+\tilde{X}^i_\alpha$ is a binomial variable following $\mathcal{B}(\alpha, \tilde{p}_i)$, with $\tilde{p}_i$ probability that candidate i is in a public vote.
+
+We have:
+
+$\tilde{p}_i=p_i+(1-p_i)*\frac{k-1}{K-1}$
+
+
+We use Bienayme-Tchebychev inequality on $\tilde{Y}_\alpha^i$:
+
+$ \mathbb{P}(|\dfrac{\tilde{Y}^i_\alpha-\alpha*\tilde{p}_i}{\alpha}| > x )  \leqslant \dfrac{\tilde{p}_i(1-\tilde{p}_i)}{\alpha x^2}$
+
+
+Using the public votes of $\alpha$ voters, we can compare the scores we obtain for each candidate to the global results of the election, and measure whether the difference is likely or not. This provides a measure of verifiability (we just need to choose a level of verification with the term $\dfrac{\tilde{p}_i(1-\tilde{p}_i)}{\alpha x^2}$).
+
+
+\subsection{Evaluation of privacy}
+
+Privacy can be defined in multiple ways. Here, we will measure the entropy on one vote, as the amount of unknown information to an attacker to know one vote.
+
+$Privacy=H(vote)=-\sum\limits_{c \in candidates} p(c)log_2(p(c))=log_2(k)$
+
+In this, we do not take into account that each candidate has a probability $p_i$ of being the real value of the vote (to simplify calculations). This corresponds to the situation where each candidate obtains as much vote as any other.
+
+
+\section{Second scheme: public storage of the votes under probabilistic value}
+
+
+\subsection{Description}
+
+The election is in the same configuration as in the previous section. However, before the the voter chooses who he votes for, he sees a set of random variables appearing on the screen: $R_1, ..., R_K$. They all follow a Gaussian law, with $R_1$ following a $\mathcal{N}(\mu, \sigma^2)$, and all the other $R_i$ following a $\mathcal{N}(\frac{1-\mu}{K}, \sigma^2)$. Then, the voter chooses who he votes for, and the variables $R_i$ are rotated so that $R_1$ is associated to the candidate chosen by the voter. The values of the $R_i$ are then made public. 
+
+$\mu$ is chosen such that $\mu > \frac{1-\mu}{K}$, so that on average we can distinguish the correct candidate. The bigger the difference, the easier it is to identify the real value of the vote. In addition, $\sigma$ quantifies the randomness of the values of $R_i$, and also takes part in how easy it is to identify the real value of a vote.
+
+\bigbreak
+
+This structure allows the voter to be sure that he is not duped on the value of his public vote, since the random variables $R_i$ are evaluated before the voter enters his vote.
+
+
+\subsection{Verifiability evaluation}
+
+
+
+\subsection{Privacy evaluation}
+
+
+\section{Third scheme: Privacy of the votes depending on subgroups of the voting population}
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
+ 
