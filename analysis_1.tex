@@ -15,6 +15,34 @@
 \maketitle
 
 
+\section{Definitions of privacy and verifiability}
+
+\subsection{Quantifying information on a vote}
+
+If we have access to some partial information on a vote, we want to measure the mount of information we can get from it. From a message mes, we define a function quantifying the information on the message as:
+
+$Info(mes)=\dfrac{\text{number of possible votes coherent with mes}}{total number of possible votes}$
+
+This definition can be applied to the vote of one user, with a receipt providing partial information on the vote, but also on an entire election, with mes being all the public information we have access to.
+
+
+\subsection{Privacy}
+
+Privacy is the amount of money required to buy one vote, taking into account the probability that the vote was correctly bought. For instance, if 10€ are given to any person who has a proof such that "I voted for candidate A or candidate B", with candidate A being the one that we want to buy, then privacy amounts to 20€. (This holds true if the voter cannot choose A and B appearing in his proof, but only chooses who he votes for).
+
+
+$privacy=\dfrac{\text{cost to change one vote}}{\text{probability that the vote was performed according to the attacker's will}}$
+
+
+\subsection{Verifiability}
+
+The election can be verified using all the public information on the votes. We define verifiability as:
+
+$Verifiability=Info(\text{all public receipts})*\text{level of verification}$
+
+The level of verification is the probability with which the verification confirms the result of the election.
+
+
 \section{First scheme: public storage of a subset of possible vote values}
 
 \subsection{Description}
@@ -66,6 +94,31 @@ $\mu$ is chosen such that $\mu > \frac{1-\mu}{K}$, so that on average we can dis
 
 This structure allows the voter to be sure that he is not duped on the value of his public vote, since the random variables $R_i$ are evaluated before the voter enters his vote.
 
+\bigbreak
+
+For simplicity, $R_1$ is chosen to be $1-(R_2+\cdots+R_K)$ such that the sum results in 1.
+
+
+\subsection{Privacy evaluation}
+
+An attacker who wants to buy votes will rely on the public receipt of the vote, which only contains partial information. Therefore, the attacker will pay an amount proportional to $R_j$.
+
+We suppose that the voter wants to vote for $C_1$, and the attacker wants the voter to vote for $C_j$, $j\neq 1$. The attacker will consider that the user voted for the candidate associated to the highest of the $R_i$s. We need to measure the frequency that the highest of the $R_i$s is associated to $C_1$, revealing the correct vote. The parameters that can be modified are:
+\begin{itemize}
+    \item $\epsilon$: this defines the mean for the distribution of $R_1$, as $\mu + \epsilon$. $\epsilon$ determines how confident the verification can be.
+    \item $\sigma$: the highest the sigma, the more dense the distributions. $\sigma$ determines how many votes are necessary for the result of the verification to be trustworthy.
+\end{itemize}
+
+We generate random sets of $R_1, \cdots, R_K$, and measure the probability that each one is associated to both distribution. We note $D_1$ the distribution of $R_1$ (correct value of the vote), and $D_2$ the distribution of the incorrect values of the vote (for $R_2, \cdots, R_K$).
+
+We have:
+
+$\mathbb{P}(R_i\text{ follows }D_1 | \text{1 of the Rs follows }D_1)=\dfrac{\mathbb{P}(R_i\sim D_1)\mathb{P}(R_1 \sim D_2)\cdots \mathbb{P}(R_K \sim D_2)}{\sum\limits_{j=1}^{K}\mathbb{P}(R_j\sim D_1)\mathb{P}(R_1 \sim D_2)\cdots \mathbb{P}(R_K \sim D_2)}$
+
+We count the number of times that $\mathbb{P}(R_i\text{ follows }D_1 | \text{1 of the Rs follows }D_1)$ is maximum for i=1 as the number of times the correct vote of the user is revealed to the attacker. Ideally, it should happen 1/K times.
+
+\includegraphics[scale=0.5]{distribution_proba/influence_sigma.png}
+\includegraphics[scale=0.8]{distribution_proba/influence_sigma_epsilon.png}
 
 \subsection{Verifiability evaluation}
 
