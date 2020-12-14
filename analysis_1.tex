@@ -10,6 +10,9 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
+
+\newcommand{\Prob}{\mathbb{P}}
+
 \begin{document}
 
 \maketitle
@@ -21,7 +24,7 @@
 
 If we have access to some partial information on a vote, we want to measure the mount of information we can get from it. From a message mes, we define a function quantifying the information on the message as:
 
-$Info(mes)=\dfrac{\text{number of possible votes coherent with mes}}{total number of possible votes}$
+$Info(mes)=\dfrac{\text{number of possible votes coherent with mes}}{\text{total number of possible votes}}$
 
 This definition can be applied to the vote of one user, with a receipt providing partial information on the vote, but also on an entire election, with mes being all the public information we have access to.
 
@@ -126,10 +129,39 @@ From the graph, we see that complete privacy is reachable for some correct choic
 \subsection{Verifiability evaluation}
 
 
-We are going to measure the verifiability by playing on $\sigma, \epsilon$ again. However, this time we measure something else: the resulting distribution probability of the election result. The election result is the percentage of votes for $C_1$ that we estimate (in reality, it is 100\%).However, a key parameter is the number of votess: the bigger the number of voters, the better the verification is.
+We are going to measure the verifiability by playing on $\sigma, \epsilon$ again. However, this time we measure something else: the resulting distribution probability of the election result. The election result is the percentage of votes for $C_1$ that we estimate (in reality, it is 100\%).However, a key parameter is the number of votes: the bigger the number of voters, the better the verification is.
 
+\bigbreak
 
+Let's suppose that the public ticket of voter $V_i$ is $(R_1(V_i), \cdots, R_K(V_i))$ with a real vote for $C_1$ for all users. We consider that $R_2, \cdots, R_K$ follow the probability distribution $\mathcal{N}(\mu ,\sigma)$, and $R_1$ follows the probability distribution $\mathcal{N}(\mu+\epsilon ,\sigma)$. We suppose that the sum is normalized such that for each user: $R_1 + \cdots + R_K=1$.
 
+Knowing only the public tickets, the probability that the voter voted for each candidates are:
+
+$\Prob(V_i: C_k)=\dfrac{R_k(V_i) - \mu}{\epsilon}$
+
+Hence $Prob(V_i: C_k)$ follows the probability distribution $\mathcal{N}(0, \dfrac{\sigma}{\epsilon})$ for $k>1$, and $Prob(V_i: C_1)$ follows the probability distribution $\mathcal{N}(1, \dfrac{\sigma}{\epsilon})$.
+
+From this, we note $Res(C_k)$ the predicted result of candidate $C_k$ from the public tickets:
+
+$Res(C_k)=\sum\limits_{V_i}\dfrac{p_k(V_i)-\mu}{\sigma}$
+
+Hence:
+
+$Res(C_1) \sim \mathcal{N}(N, \dfrac{\sigma \sqrt{N}}{\epsilon})$
+
+$Res(C_k) \sim \mathcal{N}(0, \dfrac{\sigma \sqrt{N}}{\epsilon})$
+
+Hence the precision of the verifiability is proportionate to $\dfrac{\sigma \sqrt{N}}{\epsilon}$. From the initial definitions:
+
+$Info(\text{1 ticket})=\epsilon$
+
+$Info(\text{all tickets})=N \epsilon$
+
+$Verif=N \epsilon * \dfrac{\sigma \sqrt{N}}{\epsilon} = N\sqrt{N} \sigma$.
+
+Beware: this measure of verification is limited, since it does not result in $\epsilon$ in its measure. Maybe $\dfrac{\sigma \sqrt{N}}{\epsilon}$ is better?
+
+\underline{Interpretation: } If we consider a population of 1 million voters, and (according to the privacy section) $\dfrac{\sigma}{\epsilon}=10^{1.25}$, we have a result of election confirmed with a precision of less than 1700 votes in 66\% of cases, and 3400 votes in 98\% of cases. This is a precision of 1.7\% (respectively 3.4\%): it is good, but can in some conditions not be enough.
 
 \section{Protection against corruption within the administrators}
 
